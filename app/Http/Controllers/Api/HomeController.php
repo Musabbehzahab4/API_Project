@@ -28,23 +28,48 @@ class HomeController extends Controller
             'message' => 'Category Founded Successfully'
         ], 200);
     }
-    public function subcategory()
+    public function subcategory($id = null)
     {
-        $subcateg = SubcCategory::all();
+        // Query subcategories
+        $subcategs = SubcCategory::query();
+        if ($id !== null) {
+            $subcategs->where('category', $id);
+        }
+        $subcategs = $subcategs->get();
+
         return response()->json([
             'success' => true,
-            'SubCategory' => $subcateg,
-            'message' => 'SubCategory Founded Successfully'
+            'SubCategory' => $subcategs,
+            'message' => 'Subcategories retrieved successfully'
         ], 200);
     }
 
-    public function product()
+
+
+
+    public function product($brand_id = null, $category_id = null, $subcategory_id = null)
     {
-        $product = Product::all();
+        $product = Product::query();
+
+        if ($brand_id !== null) {
+            $product->where('brand_name', $brand_id);
+        }
+
+        if ($category_id !== null) {
+            $product->where('category_name', $category_id);
+        }
+
+        if ($subcategory_id !== null) {
+            $product->where('subcategory_name', $subcategory_id);
+        }
+
+        $products = $product->get();
+
         return response()->json([
             'success' => true,
-            'Product' => $product,
-            'message' => 'Product Founded Successfully'
+            'products' => $products,
+            'message' => 'Products found successfully'
         ], 200);
     }
+
 }
