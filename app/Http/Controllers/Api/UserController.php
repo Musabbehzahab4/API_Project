@@ -46,9 +46,11 @@ class UserController extends Controller
             $success = $user->createToken('MyApp')->plainTextToken;
 
             return Response(['token' => $success], 200);
+        } else {
+
+            return Response(['message' => 'email or password wrong'], 401);
         }
 
-        return Response(['message' => 'email or password wrong'], 401);
     }
 
     /**
@@ -61,9 +63,11 @@ class UserController extends Controller
             $user = Auth::user();
 
             return Response(['data' => $user], 200);
+        } else {
+
+            return Response(['data' => 'Unauthorized'], 401);
         }
 
-        return Response(['data' => 'Unauthorized'], 401);
     }
     /**
      * Display the specified resource.
