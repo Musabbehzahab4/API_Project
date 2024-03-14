@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
@@ -31,5 +33,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('category', [HomeController::class, 'category']);
     Route::get('subcategory/{id?}', [HomeController::class, 'subcategory']);
     Route::get('product/{brand_id?}/{category_id?}/{subcategory_id?}', [HomeController::class, 'product']);
+    //===================================OrderController==========================================//
+    Route::post('/allorder',[OrderController::class,'index']);
+    Route::post('/order',[OrderController::class,'store']);
+
     Route::get('logout', [UserController::class, 'logout']);
 });
