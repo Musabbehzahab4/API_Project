@@ -44,6 +44,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+
         if ($request != null) {
             $user = Auth::id();
             $order = new Order();
@@ -54,31 +55,27 @@ class OrderController extends Controller
             $order->address = $request->address;
             $order->country = $request->country;
 
-
-            $product = $request->product_id;
+            $product = $request->product_detail;
 
             if ($order->save()) {
-                $order_id = $order->id;
-                $orderdetail = new OrderDetail;
-                $orderdetail->order_id = $order_id;
-                $orderdetail->product_id = $product;
-                $orderdetail->quantity = $request->quantity;
-                $orderdetail->price = $request->price;
-
-                if ($orderdetail->save()) {
-                    return response()->json([
-                        'success' => true,
-                        'order' => $order,
-                        'orderdetail' => $orderdetail,
-                        'message' => 'order added'
-                    ], 200);
-                } else {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'something went wrong'
-                    ], 200);
+                foreach($product as $products){
+                    $order_id = $order->id;
+                    $orderdetail = new OrderDetail;
+                    $orderdetail->order_id = $order_id;
+                    $orderdetail->product_id = $products['product_id'];
+                    $orderdetail->quantity = $products['quantity'];
+                    $orderdetail->price = $products['price'];
+                    $orderdetail->save();
+                    $orderdetails[] = $orderdetail;
                 }
-            } else {
+                return response()->json([
+                    'success' => true,
+                    'order' => $order,
+                    'orderdetail' => $orderdetails,
+                    'message' => 'order added'
+                ], 200);
+
+        }else {
                 return response()->json(['error' => 'order did not save'], 404);
             }
         }
